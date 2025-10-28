@@ -1,5 +1,5 @@
 import { supabase } from '../config/supabase';
-import { uploadImage, getPublicImageUrl } from '../config/supabase';
+import { uploadImage } from '../config/supabase';
 
 export const artworkService = {
   // Obtener todas las obras activas

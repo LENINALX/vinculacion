@@ -18,13 +18,13 @@ const Footer = () => {
               La plataforma líder en subastas de arte digital. Conectamos artistas talentosos con coleccionistas apasionados.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="www.facebook.com" className="text-gray-400 hover:text-white transition">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="www.instagram.com" className="text-gray-400 hover:text-white transition">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition">
+              <a href="www.x.com" className="text-gray-400 hover:text-white transition">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>

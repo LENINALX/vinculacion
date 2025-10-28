@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Upload, Image as ImageIcon } from 'lucide-react';
 import Modal from './Modal';
 import Input, { TextArea, Select } from '../common/Input';
@@ -64,7 +64,7 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
         artistId: user.id
       };
 
-      const { data, error } = await artworkService.createArtwork(
+      const { error } = await artworkService.createArtwork(
         artworkData,
         formData.image
       );

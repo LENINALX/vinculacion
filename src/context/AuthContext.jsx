@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authService } from '../services/authService';
 
 const AuthContext = createContext({});
@@ -16,11 +16,35 @@ export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const loadUserProfile = useCallback(async (userId) => {
+    try {
+      const { data, error } = await authService.getUserProfile(userId);
+      if (error) throw error;
+      setUserProfile(data);
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+    }
+  }, []);
+
+  // ✅ 1. Declaramos checkUser primero, y con useCallback
+  const checkUser = useCallback(async () => {
+    try {
+      const { user: currentUser } = await authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+        await loadUserProfile(currentUser.id);
+      }
+    } catch (error) {
+      console.error('Error checking user:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadUserProfile]); // sin dependencias → estable entre renders
+
+  // ✅ 2. Ahora useEffect puede usar checkUser sin warnings
   useEffect(() => {
-    // Verificar sesión actual
     checkUser();
 
-    // Escuchar cambios de autenticación
     const { data: authListener } = authService.onAuthStateChange(
       async (event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
@@ -36,31 +60,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       authListener?.subscription?.unsubscribe();
     };
-  }, []);
-
-  const checkUser = async () => {
-    try {
-      const { user: currentUser } = await authService.getCurrentUser();
-      if (currentUser) {
-        setUser(currentUser);
-        await loadUserProfile(currentUser.id);
-      }
-    } catch (error) {
-      console.error('Error checking user:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadUserProfile = async (userId) => {
-    try {
-      const { data, error } = await authService.getUserProfile(userId);
-      if (error) throw error;
-      setUserProfile(data);
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-    }
-  };
+  }, [checkUser, loadUserProfile]);
 
   const signUp = async (userData) => {
     try {
