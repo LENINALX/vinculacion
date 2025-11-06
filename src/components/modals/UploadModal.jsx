@@ -177,7 +177,7 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
           name="initialPrice"
           value={formData.initialPrice}
           onChange={handleChange}
-          placeholder="100.00"
+          placeholder="10.00"
           min="0"
           step="0.01"
           required

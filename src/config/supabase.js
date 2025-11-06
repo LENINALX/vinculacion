@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 // IMPORTANTE: Reemplaza estos valores con tus credenciales de Supabase
 // Las puedes encontrar en: Supabase Dashboard -> Settings -> API
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://eatgleorvknntjkhumwo.supabase.co';
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdGdsZW9ydmtubnRqa2h1bXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNzI4OTcsImV4cCI6MjA3NjY0ODg5N30.gZdDj3hGhWH-BViWGyrfpQMyb3CtieZoJUvI1wKkUh8';
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhdGdsZW9ydmtubnRqa2h1bXdvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTA3Mjg5NywiZXhwIjoyMDc2NjQ4ODk3fQ.9zyid6jFckSt4ksaots03UxJ2cXhVtKagefTQuyFqpA';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
