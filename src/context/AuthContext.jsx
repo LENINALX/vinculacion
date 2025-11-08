@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef
+} from 'react';
 import { authService } from '../services/authService';
 
 const AuthContext = createContext({});
@@ -35,7 +42,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ 1. Declaramos checkUser primero, y con useCallback
   const checkUser = useCallback(async () => {
     try {
       const { user: currentUser } = await authService.getCurrentUser();
@@ -48,28 +54,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [loadUserProfile]); // sin dependencias → estable entre renders
-
-  // ✅ 2. Ahora useEffect puede usar checkUser sin warnings
-  useEffect(() => {
-    checkUser();
-
-    const { data: authListener } = authService.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          setUser(session.user);
-          await loadUserProfile(session.user.id);
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          setUserProfile(null);
-        }
-      }
-    );
-
-    return () => {
-      authListener?.subscription?.unsubscribe();
-    };
-  }, [checkUser, loadUserProfile]);
+  }, [loadUserProfile]);
 
   const signUp = async (userData) => {
     try {
@@ -113,22 +98,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [clearInactivityTimer]);
 
-  const updateProfile = async (updates) => {
-    try {
-      const { data, error } = await authService.updateProfile(user.id, updates);
-      if (error) throw error;
-      setUserProfile(data);
-      return { success: true, data };
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      return { success: false, error: error.message };
-    }
-  };
-
   const handleAutoSignOut = useCallback(async () => {
-    const result = await signOut({ silent: true });
-    if (result.success) {
-      alert('Tu sesión se cerró por inactividad. Vuelve a iniciar sesión.');
+    const { success } = await signOut({ silent: true });
+    if (success) {
+      alert('Sesión cerrada por inactividad. Vuelve a iniciar sesión.');
     }
   }, [signOut]);
 
@@ -146,7 +119,6 @@ export const AuthProvider = ({ children }) => {
 
     const events = ['click', 'keydown', 'mousemove', 'touchstart'];
     const resetTimer = () => scheduleInactivityTimer();
-
     events.forEach((event) => window.addEventListener(event, resetTimer));
     scheduleInactivityTimer();
 
@@ -156,6 +128,59 @@ export const AuthProvider = ({ children }) => {
     };
   }, [user, scheduleInactivityTimer, clearInactivityTimer]);
 
+  useEffect(() => {
+    checkUser();
+    const { data: authListener } = authService.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          setUser(session.user);
+          await loadUserProfile(session.user.id);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setUserProfile(null);
+        }
+      }
+    );
+
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
+  }, [checkUser, loadUserProfile]);
+
+  const resetPassword = async (email) => {
+    try {
+      const { error } = await authService.resetPassword(email);
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const updatePassword = async (newPassword) => {
+    try {
+      const { error } = await authService.updatePassword(newPassword);
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      console.error('Error updating password:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const updateProfile = async (updates) => {
+    try {
+      const { data, error } = await authService.updateProfile(user.id, updates);
+      if (error) throw error;
+      setUserProfile(data);
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
   const value = {
     user,
     userProfile,
@@ -163,6 +188,8 @@ export const AuthProvider = ({ children }) => {
     signUp,
     signIn,
     signOut,
+    resetPassword,
+    updatePassword,
     updateProfile,
     isAuthenticated: !!user,
     isAdmin: userProfile?.user_type === 'admin',

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Star } from 'lucide-react';
 import PageLayout from '../components/layout/PageLayout';
 import ArtworkFilters from '../components/artworks/ArtworkFilters';
 import ArtworkGrid from '../components/artworks/ArtworkGrid';
 import BidModal from '../components/modals/BidModal';
 import PaymentModal from '../components/modals/PaymentModal';
+import PasswordResetModal from '../components/modals/PasswordResetModal';
 import { useArtworks } from '../hooks/useArtworks';
 import { artworkService } from '../services/artworkService';
+import { supabase } from '../config/supabase';
 import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
@@ -23,6 +25,8 @@ const Home = () => {
 
   const [showBidModal, setShowBidModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showRecoveryModal, setShowRecoveryModal] = useState(false);
+  const [recoveryError, setRecoveryError] = useState('');
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
   // Filtrar artworks por búsqueda
@@ -74,6 +78,54 @@ const Home = () => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const hash = window.location.hash;
+    const hasRecoveryQuery = url.searchParams.get('recovery') === '1';
+    const hasRecoveryHash = hash?.includes('type=recovery');
+
+    if (!hasRecoveryQuery && !hasRecoveryHash) return;
+
+    const ensureSession = async () => {
+      setRecoveryError('');
+      try {
+        const params = new URLSearchParams(hash.replace('#', ''));
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+          if (error) {
+            throw new Error(error.message || 'No se pudo preparar la sesión de recuperación.');
+          }
+        } else {
+          const { data, error } = await supabase.auth.getSession();
+          if (error || !data.session) {
+            throw new Error('No se encontró una sesión de recuperación válida. Abre el enlace desde tu correo.');
+          }
+        }
+        setShowRecoveryModal(true);
+      } catch (err) {
+        setRecoveryError(err.message);
+        setShowRecoveryModal(true);
+      }
+    };
+
+    ensureSession();
+  }, []);
+
+  const handleCloseRecoveryModal = () => {
+    setShowRecoveryModal(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('recovery');
+    const searchString = url.searchParams.toString();
+    const newPath = `${url.pathname}${searchString ? `?${searchString}` : ''}`;
+    window.history.replaceState(null, '', newPath);
   };
 
   return (
@@ -173,6 +225,11 @@ const Home = () => {
         onClose={() => setShowPaymentModal(false)}
         artwork={selectedArtwork}
         onSuccess={refreshArtworks}
+      />
+      <PasswordResetModal
+        isOpen={showRecoveryModal}
+        onClose={handleCloseRecoveryModal}
+        initialError={recoveryError}
       />
       </div>
     </PageLayout>

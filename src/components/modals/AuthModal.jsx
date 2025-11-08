@@ -5,14 +5,15 @@ import Input, { Select } from '../common/Input';
 import Button from '../common/Button';
 import { useAuth } from '../../context/AuthContext';
 
+// Modal para iniciar sesión, registrarse o solicitar recuperación de contraseña
 const AuthModal = ({ isOpen, onClose }) => {
-  const { signIn, signUp } = useAuth();
-  const [mode, setMode] = useState('login'); // 'login' o 'register'
+  const { signIn, signUp, resetPassword } = useAuth();
+  const [mode, setMode] = useState('login'); // 'login' | 'register' | 'reset'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [formErrors, setFormErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,98 +23,32 @@ const AuthModal = ({ isOpen, onClose }) => {
     artistId: ''
   });
 
-  const passwordRequirements = 'Mínimo 7 caracteres, incluye un número y una mayúscula.';
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{7,}$/;
-  const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/;
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === 'phone' || name === 'artistId') {
-      if (value && !/^\d*$/.test(value)) {
-        return;
-      }
-    }
-
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setError('');
-    setFormErrors(prev => {
-      if (!prev[name]) return prev;
-      const updated = { ...prev };
-      delete updated[name];
-      return updated;
-    });
-  };
-
-  const validateLogin = () => {
-    const errors = {};
-    if (!emailRegex.test(formData.email.trim())) {
-      errors.email = 'Ingresa un correo válido.';
-    }
-    if (!formData.password) {
-      errors.password = 'Ingresa tu contraseña.';
-    }
-
-    setFormErrors(errors);
-    if (Object.keys(errors).length) {
-      setError('Por favor corrige los campos resaltados.');
-      return false;
-    }
-    return true;
-  };
-
-  const validateRegister = () => {
-    const errors = {};
-    const fullName = formData.fullName.trim();
-
-    if (!fullName) {
-      errors.fullName = 'Ingresa tu nombre completo.';
-    } else if (!nameRegex.test(fullName)) {
-      errors.fullName = 'Solo se permiten letras y espacios.';
-    }
-
-    if (formData.userType === 'artist') {
-      const artistId = formData.artistId.trim();
-      if (!artistId) {
-        errors.artistId = 'Ingresa la cédula del artista.';
-      } else if (!/^\d+$/.test(artistId)) {
-        errors.artistId = 'La cédula solo debe contener números.';
-      }
-    }
-
-    if (formData.phone && !/^\d{7,15}$/.test(formData.phone)) {
-      errors.phone = 'Ingresa un teléfono válido (solo números).';
-    }
-
-    if (!emailRegex.test(formData.email.trim())) {
-      errors.email = 'Ingresa un correo válido.';
-    }
-
-    if (!passwordRegex.test(formData.password)) {
-      errors.password = 'La contraseña no cumple los requisitos.';
-    }
-
-    setFormErrors(errors);
-    if (Object.keys(errors).length) {
-      setError('Por favor corrige los campos resaltados.');
-      return false;
-    }
-    return true;
+    setSuccessMessage('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-
-    const isValid = mode === 'login' ? validateLogin() : validateRegister();
-    if (!isValid) {
-      setLoading(false);
-      return;
-    }
+    setSuccessMessage('');
 
     try {
+      if (mode === 'reset') {
+        const { success, error } = await resetPassword(formData.email);
+        if (!success) {
+          setError(error || 'No se pudo enviar el correo de recuperación.');
+          setLoading(false);
+          return;
+        }
+        setSuccessMessage('Hemos enviado un enlace para restablecer tu contraseña.');
+        setLoading(false);
+        return;
+      }
+
       if (mode === 'login') {
         const { success, error } = await signIn(formData.email, formData.password);
         if (!success) {
@@ -128,9 +63,9 @@ const AuthModal = ({ isOpen, onClose }) => {
           setLoading(false);
           return;
         }
-        alert('Registro exitoso! Por favor verifica tu correo electrónico.');
+        alert('Registro exitoso. Revisa tu correo para confirmar la cuenta.');
       }
-      
+
       onClose();
       resetForm();
     } catch (err) {
@@ -150,13 +85,26 @@ const AuthModal = ({ isOpen, onClose }) => {
       artistId: ''
     });
     setError('');
-    setFormErrors({});
+    setSuccessMessage('');
     setShowPassword(false);
   };
 
   const toggleMode = () => {
     setMode(mode === 'login' ? 'register' : 'login');
     resetForm();
+  };
+
+  const goToReset = () => {
+    setMode('reset');
+    setError('');
+    setSuccessMessage('');
+    setShowPassword(false);
+  };
+
+  const backToLogin = () => {
+    setMode('login');
+    setError('');
+    setSuccessMessage('');
     setShowPassword(false);
   };
 
@@ -165,17 +113,29 @@ const AuthModal = ({ isOpen, onClose }) => {
     { value: 'artist', label: 'Artista' }
   ];
 
+  const title = mode === 'login'
+    ? 'Iniciar Sesión'
+    : mode === 'register'
+      ? 'Crear Cuenta'
+      : 'Recuperar Contraseña';
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={mode === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta'}
+      title={title}
       size="md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            {error}
+        {(error || successMessage) && (
+          <div
+            className={`px-4 py-3 rounded-lg ${
+              error
+                ? 'bg-red-50 border border-red-200 text-red-700'
+                : 'bg-green-50 border border-green-200 text-green-700'
+            }`}
+          >
+            {error || successMessage}
           </div>
         )}
 
@@ -190,7 +150,6 @@ const AuthModal = ({ isOpen, onClose }) => {
               placeholder="Juan Pérez"
               icon={UserIcon}
               required
-              error={formErrors.fullName}
             />
 
             <Select
@@ -212,8 +171,6 @@ const AuthModal = ({ isOpen, onClose }) => {
                 placeholder="0123456789"
                 icon={CreditCard}
                 required
-                inputMode="numeric"
-                error={formErrors.artistId}
               />
             )}
 
@@ -225,8 +182,6 @@ const AuthModal = ({ isOpen, onClose }) => {
               onChange={handleChange}
               placeholder="+593 99 123 4567"
               icon={Phone}
-              inputMode="numeric"
-              error={formErrors.phone}
             />
           </>
         )}
@@ -240,35 +195,28 @@ const AuthModal = ({ isOpen, onClose }) => {
           placeholder="correo@ejemplo.com"
           icon={Mail}
           required
-          error={formErrors.email}
         />
 
-        <Input
-          label="Contraseña"
-          type={showPassword ? 'text' : 'password'}
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="••••••••"
-          icon={Lock}
-          required
-          error={formErrors.password}
-          rightElement={
-            <button
-              type="button"
-              onClick={() => setShowPassword(prev => !prev)}
-              className="text-gray-500 hover:text-gray-700 focus:outline-none"
-              aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
-          }
-        />
-
-        {mode === 'register' && (
-          <p className="text-xs text-gray-500 -mt-2">
-            {passwordRequirements}
-          </p>
+        {mode !== 'reset' && (
+          <Input
+            label="Contraseña"
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="••••••••"
+            icon={Lock}
+            required
+            rightElement={
+              <button
+                type="button"
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            }
+          />
         )}
 
         <Button
@@ -277,20 +225,57 @@ const AuthModal = ({ isOpen, onClose }) => {
           fullWidth
           disabled={loading}
         >
-          {loading ? 'Procesando...' : mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}
+          {loading
+            ? 'Procesando...'
+            : mode === 'login'
+              ? 'Iniciar Sesión'
+              : mode === 'register'
+                ? 'Registrarse'
+                : 'Enviar instrucciones'}
         </Button>
 
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={toggleMode}
-            className="text-purple-600 hover:text-purple-700 text-sm font-medium"
-          >
-            {mode === 'login' 
-              ? '¿No tienes cuenta? Regístrate' 
-              : '¿Ya tienes cuenta? Inicia sesión'}
-          </button>
-        </div>
+        {mode === 'login' && (
+          <div className="text-center space-y-2">
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="block w-full text-purple-600 hover:text-purple-700 text-sm font-medium"
+            >
+              ¿No tienes cuenta? Regístrate
+            </button>
+            <button
+              type="button"
+              onClick={goToReset}
+              className="text-sm text-purple-500 hover:text-purple-600"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
+          </div>
+        )}
+
+        {mode === 'register' && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="text-purple-600 hover:text-purple-700 text-sm font-medium"
+            >
+              ¿Ya tienes cuenta? Inicia sesión
+            </button>
+          </div>
+        )}
+
+        {mode === 'reset' && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={backToLogin}
+              className="text-purple-600 hover:text-purple-700 text-sm font-medium"
+            >
+              Volver a iniciar sesión
+            </button>
+          </div>
+        )}
       </form>
     </Modal>
   );

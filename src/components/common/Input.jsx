@@ -18,22 +18,22 @@ const Input = ({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label 
-          htmlFor={name} 
+        <label
+          htmlFor={name}
           className="block text-sm font-medium text-gray-700 mb-2"
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      
+
       <div className="relative">
         {Icon && (
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
             <Icon className="w-5 h-5" />
           </div>
         )}
-        
+
         <input
           type={type}
           id={name}
@@ -61,7 +61,7 @@ const Input = ({
           </div>
         )}
       </div>
-      
+
       {error && (
         <p className="mt-1 text-sm text-red-500">{error}</p>
       )}
@@ -85,15 +85,15 @@ export const TextArea = ({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label 
-          htmlFor={name} 
+        <label
+          htmlFor={name}
           className="block text-sm font-medium text-gray-700 mb-2"
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      
+
       <textarea
         id={name}
         name={name}
@@ -112,7 +112,7 @@ export const TextArea = ({
         `}
         {...props}
       />
-      
+
       {error && (
         <p className="mt-1 text-sm text-red-500">{error}</p>
       )}
@@ -135,15 +135,15 @@ export const Select = ({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <label 
-          htmlFor={name} 
+        <label
+          htmlFor={name}
           className="block text-sm font-medium text-gray-700 mb-2"
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      
+
       <select
         id={name}
         name={name}
@@ -166,7 +166,7 @@ export const Select = ({
           </option>
         ))}
       </select>
-      
+
       {error && (
         <p className="mt-1 text-sm text-red-500">{error}</p>
       )}

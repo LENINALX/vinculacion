@@ -119,6 +119,33 @@ export const authService = {
   // Listener para cambios de autenticación
   onAuthStateChange(callback) {
     return supabase.auth.onAuthStateChange(callback);
+  },
+
+  // Restablecer contraseña
+  async resetPassword(email) {
+    try {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/?recovery=1`
+      });
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error sending reset password email:', error);
+      return { data: null, error };
+    }
+  },
+
+  async updatePassword(newPassword) {
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error updating password:', error);
+      return { data: null, error };
+    }
   }
 };
 
