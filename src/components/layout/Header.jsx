@@ -1,11 +1,30 @@
 import React, { useState } from 'react';
 import { Menu, X, Upload, LogOut, User } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
+
+const navItems = [
+  { path: '/', label: 'Inicio' },
+  { path: '/subastas', label: 'Subastas' },
+  { path: '/artistas', label: 'Artistas' },
+  { path: '/acerca', label: 'Acerca de' }
+];
 
 const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
   const { user, userProfile, signOut, isArtist } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigation = (path) => {
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate(path);
+    }
+    setMobileMenuOpen(false);
+  };
 
   const handleSignOut = async () => {
     const { success } = await signOut();
@@ -29,29 +48,31 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => handleNavigation('/')}
+            className="flex items-center space-x-2 focus:outline-none"
+          >
             <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">S</span>
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               SubastArte
             </h1>
-          </div>
+          </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="#inicio" className="text-gray-700 hover:text-purple-600 transition">
-              Inicio
-            </a>
-            <a href="#subastas" className="text-gray-700 hover:text-purple-600 transition">
-              Subastas
-            </a>
-            <a href="#artistas" className="text-gray-700 hover:text-purple-600 transition">
-              Artistas
-            </a>
-            <a href="#acerca" className="text-gray-700 hover:text-purple-600 transition">
-              Acerca de
-            </a>
+            {navItems.map((item) => (
+              <button
+                key={item.path}
+                type="button"
+                onClick={() => handleNavigation(item.path)}
+                className={`text-gray-700 hover:text-purple-600 transition ${location.pathname === item.path ? 'font-semibold text-purple-600' : ''}`}
+              >
+                {item.label}
+              </button>
+            ))}
           </nav>
 
           {/* User Actions */}
@@ -107,34 +128,16 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 space-y-2 border-t border-gray-200 pt-4">
-            <a 
-              href="#inicio" 
-              className="block py-2 text-gray-700 hover:text-purple-600"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Inicio
-            </a>
-            <a 
-              href="#subastas" 
-              className="block py-2 text-gray-700 hover:text-purple-600"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Subastas
-            </a>
-            <a 
-              href="#artistas" 
-              className="block py-2 text-gray-700 hover:text-purple-600"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Artistas
-            </a>
-            <a 
-              href="#acerca" 
-              className="block py-2 text-gray-700 hover:text-purple-600"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Acerca de
-            </a>
+            {navItems.map((item) => (
+              <button
+                key={item.path}
+                type="button"
+                onClick={() => handleNavigation(item.path)}
+                className="block w-full text-left py-2 text-gray-700 hover:text-purple-600"
+              >
+                {item.label}
+              </button>
+            ))}
             
             {isArtist && (
               <button

@@ -9,7 +9,7 @@ import { useArtworks } from '../hooks/useArtworks';
 import { artworkService } from '../services/artworkService';
 import { useAuth } from '../context/AuthContext';
 
-const Home = () => {
+const Subastas = () => {
   const { isAdmin } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const { 
@@ -25,7 +25,6 @@ const Home = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
 
-  // Filtrar artworks por búsqueda
   const filteredArtworks = artworks.filter(art => 
     art.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     art.artist?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -37,7 +36,6 @@ const Home = () => {
     art.artist?.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handlers
   const handleBidClick = (artwork) => {
     setSelectedArtwork(artwork);
     setShowBidModal(true);
@@ -72,53 +70,33 @@ const Home = () => {
     refreshArtworks();
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   return (
     <PageLayout onUploadSuccess={refreshArtworks}>
-      <div className="bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Hero Section */}
-      <section
-        id="inicio"
-        className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 text-white py-16"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Descubre Arte Único
-          </h2>
-          <p className="text-xl mb-8 text-purple-100">
-            Participa en subastas de obras originales de artistas talentosos
-          </p>
-          
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto relative">
-            <input
-              type="text"
-              placeholder="Buscar obras o artistas..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="w-full px-6 py-4 pr-12 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-lg"
-            />
-            <Search className="absolute right-4 top-4 text-gray-400" />
-          </div>
-        </div>
-      </section>
+      <div className="bg-white">
+        <section className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 text-white py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <div>
+              <p className="text-sm uppercase tracking-widest text-purple-100 font-semibold">Subastas</p>
+              <h1 className="text-4xl md:text-5xl font-bold">Explora obras disponibles</h1>
+              <p className="text-xl text-purple-100 mt-2">
+                Filtra por tipo, técnica o busca directamente por artista o nombre de la obra.
+              </p>
+            </div>
 
-      {/* Subastas Section */}
-      <section id="subastas" className="bg-white py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center">
-            <p className="text-sm uppercase tracking-widest text-purple-500 font-semibold mb-2">
-              Subastas activas
-            </p>
-            <h2 className="text-3xl font-bold text-gray-900">Explora obras disponibles</h2>
-            <p className="text-gray-600 mt-2">
-              Filtra por tipo, técnica o busca directamente por artista o nombre de la obra.
-            </p>
+            <div className="max-w-2xl mx-auto relative">
+              <input
+                type="text"
+                placeholder="Buscar obras o artistas..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-6 py-4 pr-12 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-lg"
+              />
+              <Search className="absolute right-4 top-4 text-gray-400" />
+            </div>
           </div>
+        </section>
 
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
           <ArtworkFilters 
             filters={filters}
             onFilterChange={updateFilters}
@@ -128,7 +106,7 @@ const Home = () => {
             <div>
               <div className="flex items-center space-x-2 mb-6">
                 <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-                <h3 className="text-2xl font-bold text-gray-800">Obras Destacadas</h3>
+                <h2 className="text-2xl font-bold text-gray-800">Obras Destacadas</h2>
               </div>
               <ArtworkGrid
                 artworks={filteredFeatured}
@@ -142,9 +120,9 @@ const Home = () => {
 
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-gray-800">
                 {searchTerm ? 'Resultados de Búsqueda' : 'Todas las Obras'}
-              </h3>
+              </h2>
               <p className="text-sm text-gray-500">
                 {filteredArtworks.length} obra{filteredArtworks.length === 1 ? '' : 's'} disponible{filteredArtworks.length === 1 ? '' : 's'}
               </p>
@@ -158,25 +136,24 @@ const Home = () => {
               onToggleFeatured={isAdmin ? handleToggleFeatured : undefined}
             />
           </div>
-        </div>
-      </section>
+        </section>
 
-      <BidModal
-        isOpen={showBidModal}
-        onClose={() => setShowBidModal(false)}
-        artwork={selectedArtwork}
-        onProceedToBid={handleProceedToBid}
-      />
+        <BidModal
+          isOpen={showBidModal}
+          onClose={() => setShowBidModal(false)}
+          artwork={selectedArtwork}
+          onProceedToBid={handleProceedToBid}
+        />
 
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        artwork={selectedArtwork}
-        onSuccess={refreshArtworks}
-      />
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          artwork={selectedArtwork}
+          onSuccess={refreshArtworks}
+        />
       </div>
     </PageLayout>
   );
 };
 
-export default Home;
+export default Subastas;
