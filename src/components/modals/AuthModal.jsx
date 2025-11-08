@@ -13,6 +13,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   const [formData, setFormData] = useState({
     email: '',
@@ -28,6 +29,78 @@ const AuthModal = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setError('');
     setSuccessMessage('');
+    setFormErrors((prev) => {
+      if (!prev[name]) return prev;
+      const updated = { ...prev };
+      delete updated[name];
+      return updated;
+    });
+  };
+
+  const nameRegex = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+(\s+[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+)+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^\+?\d{9,15}$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{7,}$/;
+
+  const validateRegister = () => {
+    const errors = {};
+    const name = formData.fullName.trim();
+    if (!name || !nameRegex.test(name)) {
+      errors.fullName = 'Ingresa nombre y apellido (solo letras).';
+    }
+
+    const phone = formData.phone.trim();
+    if (!phone) {
+      errors.phone = 'El teléfono es obligatorio.';
+    } else if (!phoneRegex.test(phone)) {
+      errors.phone = 'Teléfono inválido. Solo dígitos (puede iniciar con +).';
+    }
+
+    if (!emailRegex.test(formData.email.trim())) {
+      errors.email = 'Ingresa un correo válido.';
+    }
+
+    if (!passwordRegex.test(formData.password)) {
+      errors.password = 'La contraseña requiere una mayúscula, un número y ≥7 caracteres.';
+    }
+
+    if (formData.userType === 'artist') {
+      if (!formData.artistId.trim()) {
+        errors.artistId = 'La cédula es obligatoria para artistas.';
+      }
+    }
+
+    setFormErrors(errors);
+    if (Object.keys(errors).length) {
+      setError('Corrige los campos marcados antes de continuar.');
+      return false;
+    }
+    return true;
+  };
+
+  const validateLogin = () => {
+    const errors = {};
+    if (!emailRegex.test(formData.email.trim())) {
+      errors.email = 'Ingresa un correo válido.';
+    }
+    if (!formData.password.trim()) {
+      errors.password = 'Ingresa tu contraseña.';
+    }
+    setFormErrors(errors);
+    if (Object.keys(errors).length) {
+      setError('Completa los campos requeridos.');
+      return false;
+    }
+    return true;
+  };
+
+  const validateReset = () => {
+    if (!emailRegex.test(formData.email.trim())) {
+      setFormErrors({ email: 'Ingresa un correo válido.' });
+      setError('Completa los campos requeridos.');
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -38,6 +111,10 @@ const AuthModal = ({ isOpen, onClose }) => {
 
     try {
       if (mode === 'reset') {
+        if (!validateReset()) {
+          setLoading(false);
+          return;
+        }
         const { success, error } = await resetPassword(formData.email);
         if (!success) {
           setError(error || 'No se pudo enviar el correo de recuperación.');
@@ -50,13 +127,25 @@ const AuthModal = ({ isOpen, onClose }) => {
       }
 
       if (mode === 'login') {
+        if (!validateLogin()) {
+          setLoading(false);
+          return;
+        }
         const { success, error } = await signIn(formData.email, formData.password);
         if (!success) {
           setError(error || 'Error al iniciar sesión');
+          setFormErrors({
+            email: 'Revisa tu correo.',
+            password: 'Verifica tu contraseña.'
+          });
           setLoading(false);
           return;
         }
       } else {
+        if (!validateRegister()) {
+          setLoading(false);
+          return;
+        }
         const { success, error } = await signUp(formData);
         if (!success) {
           setError(error || 'Error al registrar usuario');
@@ -87,6 +176,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('');
     setSuccessMessage('');
     setShowPassword(false);
+    setFormErrors({});
   };
 
   const toggleMode = () => {
@@ -99,6 +189,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('');
     setSuccessMessage('');
     setShowPassword(false);
+    setFormErrors({});
   };
 
   const backToLogin = () => {
@@ -106,6 +197,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('');
     setSuccessMessage('');
     setShowPassword(false);
+    setFormErrors({});
   };
 
   const userTypeOptions = [
@@ -150,6 +242,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               placeholder="Juan Pérez"
               icon={UserIcon}
               required
+              error={formErrors.fullName}
             />
 
             <Select
@@ -171,6 +264,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 placeholder="0123456789"
                 icon={CreditCard}
                 required
+                error={formErrors.artistId}
               />
             )}
 
@@ -182,6 +276,8 @@ const AuthModal = ({ isOpen, onClose }) => {
               onChange={handleChange}
               placeholder="+593 99 123 4567"
               icon={Phone}
+              required
+              error={formErrors.phone}
             />
           </>
         )}
@@ -195,6 +291,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           placeholder="correo@ejemplo.com"
           icon={Mail}
           required
+          error={formErrors.email}
         />
 
         {mode !== 'reset' && (
@@ -207,6 +304,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             placeholder="••••••••"
             icon={Lock}
             required
+            error={formErrors.password}
             rightElement={
               <button
                 type="button"
@@ -217,6 +315,11 @@ const AuthModal = ({ isOpen, onClose }) => {
               </button>
             }
           />
+        )}
+        {mode === 'register' && (
+          <p className="text-xs text-gray-500 -mt-3">
+            La contraseña debe tener al menos 7 caracteres, una mayúscula y un número.
+          </p>
         )}
 
         <Button
