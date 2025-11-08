@@ -13,6 +13,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmRegister, setShowConfirmRegister] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
   const [formData, setFormData] = useState({
@@ -21,7 +22,8 @@ const AuthModal = ({ isOpen, onClose }) => {
     fullName: '',
     userType: 'client',
     phone: '',
-    artistId: ''
+    artistId: '',
+    confirmPassword: ''
   });
 
   const handleChange = (e) => {
@@ -62,6 +64,10 @@ const AuthModal = ({ isOpen, onClose }) => {
 
     if (!passwordRegex.test(formData.password)) {
       errors.password = 'La contraseña requiere una mayúscula, un número y ≥7 caracteres.';
+    }
+
+    if (formData.confirmPassword !== formData.password) {
+      errors.confirmPassword = 'Las contraseñas no coinciden.';
     }
 
     if (formData.userType === 'artist') {
@@ -171,7 +177,8 @@ const AuthModal = ({ isOpen, onClose }) => {
       fullName: '',
       userType: 'client',
       phone: '',
-      artistId: ''
+      artistId: '',
+      confirmPassword: ''
     });
     setError('');
     setSuccessMessage('');
@@ -189,6 +196,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('');
     setSuccessMessage('');
     setShowPassword(false);
+    setShowConfirmRegister(false);
     setFormErrors({});
   };
 
@@ -197,6 +205,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setError('');
     setSuccessMessage('');
     setShowPassword(false);
+    setShowConfirmRegister(false);
     setFormErrors({});
   };
 
@@ -278,6 +287,27 @@ const AuthModal = ({ isOpen, onClose }) => {
               icon={Phone}
               required
               error={formErrors.phone}
+            />
+
+            <Input
+              label="Confirmar contraseña"
+              type={showConfirmRegister ? 'text' : 'password'}
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="••••••••"
+              icon={Lock}
+              required
+              error={formErrors.confirmPassword}
+              rightElement={
+                <button
+                  type="button"
+                  className="text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowConfirmRegister((prev) => !prev)}
+                >
+                  {showConfirmRegister ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              }
             />
           </>
         )}
