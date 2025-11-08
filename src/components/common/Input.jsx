@@ -11,6 +11,7 @@ const Input = ({
   disabled = false,
   error,
   icon: Icon,
+  rightElement,
   className = '',
   ...props
 }) => {
@@ -47,11 +48,18 @@ const Input = ({
             focus:ring-2 focus:ring-purple-500 focus:border-transparent
             transition-all duration-200
             ${Icon ? 'pl-10' : ''}
+            ${rightElement ? 'pr-12' : ''}
             ${error ? 'border-red-500' : 'border-gray-300'}
             ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
           `}
           {...props}
         />
+
+        {rightElement && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            {typeof rightElement === 'function' ? rightElement() : rightElement}
+          </div>
+        )}
       </div>
       
       {error && (
