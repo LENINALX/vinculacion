@@ -1,7 +1,26 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const quickLinks = [
+    { label: 'Inicio', path: '/' },
+    { label: 'Subastas', path: '/subastas' },
+    { label: 'Artistas', path: '/artistas' },
+    { label: 'Acerca de', path: '/acerca' }
+  ];
+
+  const handleNavigate = (path) => {
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
     <footer className="bg-gray-900 text-white mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -34,26 +53,17 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
             <ul className="space-y-2">
-              <li>
-                <a href="#inicio" className="text-gray-400 hover:text-white transition">
-                  Inicio
-                </a>
-              </li>
-              <li>
-                <a href="#subastas" className="text-gray-400 hover:text-white transition">
-                  Subastas
-                </a>
-              </li>
-              <li>
-                <a href="#artistas" className="text-gray-400 hover:text-white transition">
-                  Artistas
-                </a>
-              </li>
-              <li>
-                <a href="#acerca" className="text-gray-400 hover:text-white transition">
-                  Acerca de
-                </a>
-              </li>
+              {quickLinks.map((link) => (
+                <li key={link.path}>
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate(link.path)}
+                    className="text-gray-400 hover:text-white transition"
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
