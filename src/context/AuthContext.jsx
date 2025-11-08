@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { authService } from '../services/authService';
 
 const AuthContext = createContext({});
+const INACTIVITY_TIMEOUT = 3 * 60 * 1000; // 3 minutos
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -15,6 +16,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const inactivityTimerRef = useRef(null);
+
+  const clearInactivityTimer = useCallback(() => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = null;
+    }
+  }, []);
 
   const loadUserProfile = useCallback(async (userId) => {
     try {
@@ -86,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signOut = async () => {
+  const signOut = useCallback(async ({ silent = false } = {}) => {
     try {
       const { error } = await authService.signOut();
       if (error) throw error;
@@ -95,9 +104,14 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Error in signOut:', error);
+      if (!silent) {
+        alert('Error al cerrar sesión: ' + error.message);
+      }
       return { success: false, error: error.message };
+    } finally {
+      clearInactivityTimer();
     }
-  };
+  }, [clearInactivityTimer]);
 
   const updateProfile = async (updates) => {
     try {
@@ -110,6 +124,37 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: error.message };
     }
   };
+
+  const handleAutoSignOut = useCallback(async () => {
+    const result = await signOut({ silent: true });
+    if (result.success) {
+      alert('Tu sesión se cerró por inactividad. Vuelve a iniciar sesión.');
+    }
+  }, [signOut]);
+
+  const scheduleInactivityTimer = useCallback(() => {
+    clearInactivityTimer();
+    if (!user) return;
+    inactivityTimerRef.current = setTimeout(handleAutoSignOut, INACTIVITY_TIMEOUT);
+  }, [user, handleAutoSignOut, clearInactivityTimer]);
+
+  useEffect(() => {
+    if (!user) {
+      clearInactivityTimer();
+      return undefined;
+    }
+
+    const events = ['click', 'keydown', 'mousemove', 'touchstart'];
+    const resetTimer = () => scheduleInactivityTimer();
+
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+    scheduleInactivityTimer();
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+      clearInactivityTimer();
+    };
+  }, [user, scheduleInactivityTimer, clearInactivityTimer]);
 
   const value = {
     user,
