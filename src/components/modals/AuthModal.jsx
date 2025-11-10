@@ -265,7 +265,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
             {formData.userType === 'artist' && (
               <Input
-                label="Cédula del Artista"
+                label="Cédula"
                 type="text"
                 name="artistId"
                 value={formData.artistId}

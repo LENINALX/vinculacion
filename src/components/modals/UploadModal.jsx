@@ -103,7 +103,8 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
     { value: 'Pintura', label: 'Pintura' },
     { value: 'Escultura', label: 'Escultura' },
     { value: 'Fotografía', label: 'Fotografía' },
-    { value: 'Arte Digital', label: 'Arte Digital' }
+    { value: 'Arte Digital', label: 'Arte Digital' },
+    { value: 'Otros', label: 'Otros' }
   ];
 
   return (
@@ -131,7 +132,7 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
         />
 
         <Input
-          label="Cédula del Artista"
+          label="Cédula"
           type="text"
           name="artistCedula"
           value={formData.artistCedula}
@@ -182,6 +183,28 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
           step="0.01"
           required
         />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Alto (cm)"
+            name="height"
+            type="number"
+            value={formData.height}
+            onChange={handleChange}
+            placeholder="Ej: 50"
+            required
+          />
+
+          <Input
+            label="Ancho (cm)"
+            name="width"
+            type="number"
+            value={formData.width}
+            onChange={handleChange}
+            placeholder="Ej: 70"
+            required
+          />
+        </div>
 
         {/* Upload de imagen */}
         <div>

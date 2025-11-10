@@ -8,7 +8,8 @@ const ArtworkFilters = ({ filters, onFilterChange }) => {
     { value: 'Pintura', label: 'Pintura' },
     { value: 'Escultura', label: 'Escultura' },
     { value: 'Fotografía', label: 'Fotografía' },
-    { value: 'Arte Digital', label: 'Arte Digital' }
+    { value: 'Arte Digital', label: 'Arte Digital' },
+    { value: 'Otros', label: 'Otros' }
   ];
 
   const techniques = [
@@ -19,7 +20,8 @@ const ArtworkFilters = ({ filters, onFilterChange }) => {
     { value: 'Bronce', label: 'Bronce' },
     { value: 'Mármol', label: 'Mármol' },
     { value: 'Digital', label: 'Digital' },
-    { value: 'Fotografía', label: 'Fotografía' }
+    { value: 'Fotografía', label: 'Fotografía' },
+    { value: 'Otros', label: 'Otros' }
   ];
 
   const handleTypeChange = (e) => {
