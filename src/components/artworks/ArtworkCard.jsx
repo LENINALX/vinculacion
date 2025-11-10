@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Eye, Edit2, Trash2 } from 'lucide-react';
+import { Star, Eye, Edit2, Trash2, Share2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../common/Button';
 import { getPublicImageUrl } from '../../config/supabase';
@@ -12,6 +12,32 @@ const ArtworkCard = ({ artwork, onBid, onDelete, onToggleFeatured, onEdit }) => 
     : 'https://via.placeholder.com/400x300?text=Sin+Imagen';
 
   const artistName = artwork.artist?.full_name || 'Artista Desconocido';
+
+  const handleShare =async () => {
+    const shareurl= `${window.location.origin}/?obra=${artwork.id}`;
+    const sharetext= `Mira esta obra:"${artwork.title}" por ${artistName} - $${artwork.current_bid} en ExpoSubasta. `;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: artwork.title,
+          text: sharetext,
+          url: shareurl,
+        });
+        console.log('Obra compartida exitosamente');
+      } catch (error) {
+        console.error('Error al compartir la obra:', error);
+      }
+    } else {
+      // Fallback para navegadores que no soportan la API de compartir
+      try {
+        await navigator.clipboard.writeText(shareurl);
+        alert('Enlace de la obra copiado al portapapeles');
+      } catch (error) {
+        console.error('Error al copiar el enlace:', error);
+      }
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
@@ -33,6 +59,14 @@ const ArtworkCard = ({ artwork, onBid, onDelete, onToggleFeatured, onEdit }) => 
             <span>Destacado</span>
           </div>
         )}
+
+        <Button
+          onClick={handleShare}
+          className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-700 p-2 rounded-full shadow-lg hover:bg-white transition-all"
+          title="Compartir Obra"
+        >
+          <Share2 className="w-5 h-5" />
+        </Button>
         
         {/* Overlay con título y artista */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">

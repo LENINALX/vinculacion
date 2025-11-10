@@ -99,6 +99,7 @@ const PaymentModal = ({ isOpen, onClose, artwork, onSuccess }) => {
             <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5" />
             <div className="text-sm text-blue-800">
               <p className="font-semibold mb-1">Información Segura</p>
+              <p>Las pujas se incrementan de $1 en $1 dólar.</p> 
               <p>Tus datos de pago están protegidos. Solo guardamos los últimos 4 dígitos de tu tarjeta.</p>
             </div>
           </div>

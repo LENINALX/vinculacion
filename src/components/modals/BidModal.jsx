@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gavel } from 'lucide-react';
+import { Gavel, Share2} from 'lucide-react';
 import Modal from './Modal';
 import Button from '../common/Button';
 import { useAuth } from '../../context/AuthContext';
@@ -31,6 +31,30 @@ const BidModal = ({ isOpen, onClose, artwork, onProceedToBid }) => {
     onProceedToBid(artwork);
   };
 
+  const handleShare =async () => {
+    const shareurl= `${window.location.origin}/?obra=${artwork.id}`;
+    const sharetext= `Mira esta obra:"${artwork.title}" por ${artistName} - $${artwork.current_bid} en ExpoSubasta. `;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: artwork.title,
+          text: sharetext,
+          url: shareurl,
+        });
+        console.log('Obra compartida exitosamente');
+      } catch (error) {
+        console.error('Error al compartir la obra:', error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareurl);
+        alert('Enlace de la obra copiado al portapapeles');
+      } catch (error) {
+        console.error('Error al copiar el enlace:', error);
+      }
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -53,6 +77,13 @@ const BidModal = ({ isOpen, onClose, artwork, onProceedToBid }) => {
           <h2 className="text-3xl font-bold text-gray-800 mb-2">
             {artwork.title}
           </h2>
+          <button
+    onClick={handleShare}
+    className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition"
+    title="Compartir obra"
+          >
+    <Share2 className="w-6 h-6" />
+  </button>
           <p className="text-lg text-gray-600">
             por {artistName}
           </p>
@@ -103,7 +134,7 @@ const BidModal = ({ isOpen, onClose, artwork, onProceedToBid }) => {
               {artwork.total_bids || 0} pujas realizadas
             </span>
             <span className="text-gray-600">
-              Incremento: $100.00
+              Incremento: $1.00
             </span>
           </div>
         </div>

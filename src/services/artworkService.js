@@ -83,7 +83,7 @@ export const artworkService = {
           technique: artworkData.technique,
           initial_price: parseFloat(artworkData.initialPrice),
           current_bid: parseFloat(artworkData.initialPrice),
-          min_next_bid: parseFloat(artworkData.initialPrice) + 100,
+          min_next_bid: parseFloat(artworkData.initialPrice) + 1.00,
           image_url: imagePath,
           status: 'active',
           featured: false
