@@ -130,17 +130,17 @@ const Home = () => {
 
   return (
     <PageLayout onUploadSuccess={refreshArtworks}>
-      <div className="bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="bg-[#FFFADA]">
       {/* Hero Section */}
       <section
         id="inicio"
-        className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 text-white py-16"
+        className="bg-gradient-to-r from-[#811714] via-[#AE191A] to-[#811714] text-white py-16"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-black">
             Descubre Arte Único
           </h2>
-          <p className="text-xl mb-8 text-purple-100">
+          <p className="text-xl mb-8 text-black">
             Participa en subastas de obras originales de artistas talentosos
           </p>
           
@@ -151,22 +151,22 @@ const Home = () => {
               placeholder="Buscar obras o artistas..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="w-full px-6 py-4 pr-12 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-lg"
+              className="w-full px-6 py-4 pr-12 rounded-full text-black placeholder:text-black focus:outline-none focus:ring-4 focus:ring-[#AE191A]/40 shadow-lg"
             />
-            <Search className="absolute right-4 top-4 text-gray-400" />
+            <Search className="absolute right-4 top-4 text-black" />
           </div>
         </div>
       </section>
 
       {/* Subastas Section */}
-      <section id="subastas" className="bg-white py-10">
+      <section id="subastas" className="bg-[#FFFADA] py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center">
-            <p className="text-sm uppercase tracking-widest text-purple-500 font-semibold mb-2">
+            <p className="text-sm uppercase tracking-widest text-black font-semibold mb-2">
               Subastas activas
             </p>
-            <h2 className="text-3xl font-bold text-gray-900">Explora obras disponibles</h2>
-            <p className="text-gray-600 mt-2">
+            <h2 className="text-3xl font-bold text-black">Explora obras disponibles</h2>
+            <p className="text-black mt-2">
               Filtra por tipo, técnica o busca directamente por artista o nombre de la obra.
             </p>
           </div>
@@ -180,7 +180,7 @@ const Home = () => {
             <div>
               <div className="flex items-center space-x-2 mb-6">
                 <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-                <h3 className="text-2xl font-bold text-gray-800">Obras Destacadas</h3>
+                <h3 className="text-2xl font-bold text-black">Obras Destacadas</h3>
               </div>
               <ArtworkGrid
                 artworks={filteredFeatured}
@@ -194,10 +194,10 @@ const Home = () => {
 
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-800">
+              <h3 className="text-2xl font-bold text-black">
                 {searchTerm ? 'Resultados de Búsqueda' : 'Todas las Obras'}
               </h3>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-black">
                 {filteredArtworks.length} obra{filteredArtworks.length === 1 ? '' : 's'} disponible{filteredArtworks.length === 1 ? '' : 's'}
               </p>
             </div>

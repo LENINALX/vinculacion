@@ -5,7 +5,7 @@ const ArtistGrid = ({ artists = [], loading, error }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#AE191A]" />
       </div>
     );
   }
@@ -21,7 +21,7 @@ const ArtistGrid = ({ artists = [], loading, error }) => {
   if (!artists.length) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 text-lg">Aún no hay artistas registrados.</p>
+        <p className="text-black text-lg">Aún no hay artistas registrados.</p>
       </div>
     );
   }

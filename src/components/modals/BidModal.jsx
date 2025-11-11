@@ -74,17 +74,17 @@ const BidModal = ({ isOpen, onClose, artwork, onProceedToBid }) => {
 
         {/* Título */}
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          <h2 className="text-3xl font-bold text-black mb-2">
             {artwork.title}
           </h2>
           <button
-    onClick={handleShare}
-    className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition"
-    title="Compartir obra"
+            onClick={handleShare}
+            className="p-2 text-black hover:text-[#AE191A] hover:bg-[#AE191A0F] rounded-lg transition"
+            title="Compartir obra"
           >
-    <Share2 className="w-6 h-6" />
-  </button>
-          <p className="text-lg text-gray-600">
+            <Share2 className="w-6 h-6" />
+          </button>
+          <p className="text-lg text-black">
             por {artistName}
           </p>
         </div>
@@ -92,14 +92,14 @@ const BidModal = ({ isOpen, onClose, artwork, onProceedToBid }) => {
         {/* Detalles */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-500">Tipo</p>
-            <p className="text-base font-semibold text-gray-800">
+            <p className="text-sm text-black">Tipo</p>
+            <p className="text-base font-semibold text-black">
               {artwork.artwork_type}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Técnica</p>
-            <p className="text-base font-semibold text-gray-800">
+            <p className="text-sm text-black">Técnica</p>
+            <p className="text-base font-semibold text-black">
               {artwork.technique}
             </p>
           </div>
@@ -107,33 +107,33 @@ const BidModal = ({ isOpen, onClose, artwork, onProceedToBid }) => {
 
         {/* Descripción */}
         <div>
-          <p className="text-sm text-gray-500 mb-2">Descripción</p>
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-sm text-black mb-2">Descripción</p>
+          <p className="text-black leading-relaxed">
             {artwork.description}
           </p>
         </div>
 
         {/* Información de puja */}
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
+        <div className="bg-gradient-to-br from-[#AE191A0F] to-[#81171414] rounded-xl p-6">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Puja Actual</p>
-              <p className="text-3xl font-bold text-purple-600">
+              <p className="text-sm text-black mb-1">Puja Actual</p>
+              <p className="text-3xl font-bold text-black">
                 ${artwork.current_bid?.toFixed(2) || artwork.initial_price?.toFixed(2)}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Siguiente Puja Mínima</p>
-              <p className="text-2xl font-bold text-gray-800">
+              <p className="text-sm text-black mb-1">Siguiente Puja Mínima</p>
+              <p className="text-2xl font-bold text-black">
                 ${artwork.min_next_bid?.toFixed(2)}
               </p>
             </div>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">
+            <span className="text-black">
               {artwork.total_bids || 0} pujas realizadas
             </span>
-            <span className="text-gray-600">
+            <span className="text-black">
               Incremento: $1.00
             </span>
           </div>

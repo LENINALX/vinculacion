@@ -44,7 +44,7 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-[#FFFADA] shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -53,10 +53,10 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
             onClick={() => handleNavigation('/')}
             className="flex items-center space-x-2 focus:outline-none"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#AE191A] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">S</span>
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold text-[#AE191A]">
               SubastArte
             </h1>
           </button>
@@ -68,7 +68,7 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
                 key={item.path}
                 type="button"
                 onClick={() => handleNavigation(item.path)}
-                className={`text-gray-700 hover:text-purple-600 transition ${location.pathname === item.path ? 'font-semibold text-purple-600' : ''}`}
+                className={`text-black hover:text-[#AE191A] transition ${location.pathname === item.path ? 'font-semibold text-[#AE191A]' : ''}`}
               >
                 {item.label}
               </button>
@@ -79,7 +79,7 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
           <div className="flex items-center space-x-4">
             {user && userProfile ? (
               <div className="flex items-center space-x-3">
-                <span className="hidden sm:inline text-sm text-gray-600 font-medium">
+                <span className="hidden sm:inline text-sm text-black font-medium">
                   {getUserTypeLabel()}
                 </span>
                 
@@ -117,7 +117,7 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-gray-700 hover:text-purple-600"
+              className="md:hidden p-2 text-black hover:text-[#AE191A]"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -133,7 +133,7 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
                 key={item.path}
                 type="button"
                 onClick={() => handleNavigation(item.path)}
-                className="block w-full text-left py-2 text-gray-700 hover:text-purple-600"
+                className="block w-full text-left py-2 text-black hover:text-[#AE191A]"
               >
                 {item.label}
               </button>
@@ -145,7 +145,7 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
                   onOpenUploadModal();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left py-2 text-purple-600 font-medium"
+                className="w-full text-left py-2 text-[#AE191A] font-medium"
               >
                 Subir Obra
               </button>

@@ -91,7 +91,7 @@ const PasswordResetModal = ({ isOpen, onClose, initialError = '' }) => {
       size="md"
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-black">
           Crea una contraseña segura. Necesitas escribirla dos veces para confirmarla.
         </p>
 
@@ -119,7 +119,7 @@ const PasswordResetModal = ({ isOpen, onClose, initialError = '' }) => {
           rightElement={
             <button
               type="button"
-              className="text-gray-500 hover:text-gray-700"
+              className="text-black hover:text-black"
               onClick={() => setShowPassword((prev) => !prev)}
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -139,7 +139,7 @@ const PasswordResetModal = ({ isOpen, onClose, initialError = '' }) => {
           rightElement={
             <button
               type="button"
-              className="text-gray-500 hover:text-gray-700"
+              className="text-black hover:text-black"
               onClick={() => setShowConfirm((prev) => !prev)}
             >
               {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}

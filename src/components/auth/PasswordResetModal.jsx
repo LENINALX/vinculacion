@@ -40,7 +40,7 @@ const PasswordResetModal = ({ isOpen, onClose }) => {
       size="md"
     >
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-black">
           Ingresa el correo con el que te registraste. Te enviaremos un enlace para que puedas crear una nueva contraseña.
         </p>
 

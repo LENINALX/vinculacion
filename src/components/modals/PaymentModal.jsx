@@ -140,23 +140,23 @@ const PaymentModal = ({ isOpen, onClose, artwork, onSuccess }) => {
         />
 
         {/* Resumen de puja */}
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-6 mt-6">
-          <h3 className="font-semibold text-gray-800 mb-4">Resumen de la Puja</h3>
+        <div className="bg-gradient-to-br from-[#AE191A0F] to-[#81171414] rounded-lg p-6 mt-6">
+          <h3 className="font-semibold text-black mb-4">Resumen de la Puja</h3>
           <div className="space-y-2">
             <div className="flex justify-between">
-              <span className="text-gray-600">Obra:</span>
-              <span className="font-semibold text-gray-800">{artwork.title}</span>
+              <span className="text-black">Obra:</span>
+              <span className="font-semibold text-black">{artwork.title}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Puja actual:</span>
-              <span className="font-semibold text-gray-800">
+              <span className="text-black">Puja actual:</span>
+              <span className="font-semibold text-black">
                 ${artwork.current_bid?.toFixed(2)}
               </span>
             </div>
-            <div className="border-t border-purple-200 pt-2 mt-2">
+            <div className="border-t border-[#AE191A30] pt-2 mt-2">
               <div className="flex justify-between items-center">
-                <span className="text-gray-800 font-semibold">Tu puja:</span>
-                <span className="text-2xl font-bold text-purple-600">
+                <span className="text-black font-semibold">Tu puja:</span>
+                <span className="text-2xl font-bold text-black">
                   ${artwork.min_next_bid?.toFixed(2)}
                 </span>
               </div>

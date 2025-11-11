@@ -72,13 +72,13 @@ const Subastas = () => {
 
   return (
     <PageLayout onUploadSuccess={refreshArtworks}>
-      <div className="bg-white">
-        <section className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 text-white py-16">
+      <div className="bg-[#FFFADA]">
+        <section className="bg-gradient-to-r from-[#811714] via-[#AE191A] to-[#811714] text-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <div>
-              <p className="text-sm uppercase tracking-widest text-purple-100 font-semibold">Subastas</p>
+              <p className="text-sm uppercase tracking-widest text-[#FFFADA] font-semibold">Subastas</p>
               <h1 className="text-4xl md:text-5xl font-bold">Explora obras disponibles</h1>
-              <p className="text-xl text-purple-100 mt-2">
+              <p className="text-xl text-[#FFFADA] mt-2">
                 Filtra por tipo, técnica o busca directamente por artista o nombre de la obra.
               </p>
             </div>
@@ -89,9 +89,9 @@ const Subastas = () => {
                 placeholder="Buscar obras o artistas..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-6 py-4 pr-12 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-purple-300 shadow-lg"
+                className="w-full px-6 py-4 pr-12 rounded-full text-black placeholder:text-black focus:outline-none focus:ring-4 focus:ring-[#AE191A]/40 shadow-lg"
               />
-              <Search className="absolute right-4 top-4 text-gray-400" />
+              <Search className="absolute right-4 top-4 text-black" />
             </div>
           </div>
         </section>
@@ -106,7 +106,7 @@ const Subastas = () => {
             <div>
               <div className="flex items-center space-x-2 mb-6">
                 <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-                <h2 className="text-2xl font-bold text-gray-800">Obras Destacadas</h2>
+                <h2 className="text-2xl font-bold text-black">Obras Destacadas</h2>
               </div>
               <ArtworkGrid
                 artworks={filteredFeatured}
@@ -120,10 +120,10 @@ const Subastas = () => {
 
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-black">
                 {searchTerm ? 'Resultados de Búsqueda' : 'Todas las Obras'}
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-black">
                 {filteredArtworks.length} obra{filteredArtworks.length === 1 ? '' : 's'} disponible{filteredArtworks.length === 1 ? '' : 's'}
               </p>
             </div>

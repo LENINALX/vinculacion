@@ -62,7 +62,7 @@ const ArtworkCard = ({ artwork, onBid, onDelete, onToggleFeatured, onEdit }) => 
 
         <Button
           onClick={handleShare}
-          className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-700 p-2 rounded-full shadow-lg hover:bg-white transition-all"
+          className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-black p-2 rounded-full shadow-lg hover:bg-white transition-all"
           title="Compartir Obra"
         >
           <Share2 className="w-5 h-5" />
@@ -83,36 +83,36 @@ const ArtworkCard = ({ artwork, onBid, onDelete, onToggleFeatured, onEdit }) => 
       <div className="p-4">
         {/* Tipo y técnica */}
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-500 font-medium">
+          <span className="text-sm text-black font-medium">
             {artwork.artwork_type}
           </span>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-black">
             {artwork.technique}
           </span>
         </div>
         
         {/* Descripción */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+        <p className="text-black text-sm mb-4 line-clamp-2">
           {artwork.description}
         </p>
         
         {/* Información de puja */}
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-3 mb-4">
+        <div className="bg-gradient-to-br from-[#AE191A0F] to-[#81171414] rounded-lg p-3 mb-4">
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-xs text-gray-500">Puja actual</p>
-              <p className="text-2xl font-bold text-purple-600">
+              <p className="text-xs text-black">Puja actual</p>
+              <p className="text-2xl font-bold text-black">
                 ${artwork.current_bid?.toFixed(2) || artwork.initial_price?.toFixed(2)}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-xs text-gray-500">Siguiente puja</p>
-              <p className="text-lg font-semibold text-gray-700">
+              <p className="text-xs text-black">Siguiente puja</p>
+              <p className="text-lg font-semibold text-black">
                 ${artwork.min_next_bid?.toFixed(2)}
               </p>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-black mt-2">
             {artwork.total_bids || 0} pujas realizadas
           </p>
         </div>

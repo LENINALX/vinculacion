@@ -7,7 +7,7 @@ import UploadModal from '../modals/UploadModal';
 const PageLayout = ({
   children,
   onUploadSuccess,
-  className = 'min-h-screen bg-gradient-to-br from-slate-50 to-slate-100'
+  className = 'min-h-screen bg-[#FFFADA]'
 }) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);

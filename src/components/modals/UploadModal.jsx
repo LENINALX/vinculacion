@@ -208,7 +208,7 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Upload de imagen */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-black mb-2">
             Imagen de la Obra
             <span className="text-red-500 ml-1">*</span>
           </label>
@@ -236,11 +236,11 @@ const UploadModal = ({ isOpen, onClose, onSuccess }) => {
           ) : (
             <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <ImageIcon className="w-12 h-12 text-gray-400 mb-3" />
-                <p className="mb-2 text-sm text-gray-500">
+                <ImageIcon className="w-12 h-12 text-black mb-3" />
+                <p className="mb-2 text-sm text-black">
                   <span className="font-semibold">Click para subir</span> o arrastra y suelta
                 </p>
-                <p className="text-xs text-gray-500">PNG, JPG o JPEG (MAX. 5MB)</p>
+                <p className="text-xs text-black">PNG, JPG o JPEG (MAX. 5MB)</p>
               </div>
               <input
                 type="file"
