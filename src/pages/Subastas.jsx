@@ -76,9 +76,9 @@ const Subastas = () => {
         <section className="bg-gradient-to-r from-[#811714] via-[#AE191A] to-[#811714] text-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <div>
-              <p className="text-sm uppercase tracking-widest text-[#FFFADA] font-semibold">Subastas</p>
-              <h1 className="text-4xl md:text-5xl font-bold">Explora obras disponibles</h1>
-              <p className="text-xl text-[#FFFADA] mt-2">
+              <p className="text-sm uppercase tracking-widest text-black font-semibold">Subastas</p>
+              <h1 className="text-4xl md:text-5xl font-bold text-black">Explora obras disponibles</h1>
+              <p className="text-xl text-black mt-2">
                 Filtra por tipo, técnica o busca directamente por artista o nombre de la obra.
               </p>
             </div>
