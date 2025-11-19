@@ -51,13 +51,14 @@ const Header = ({ onOpenAuthModal, onOpenUploadModal }) => {
           <button
             type="button"
             onClick={() => handleNavigation('/')}
-            className="flex items-center space-x-2 focus:outline-none"
+            className="flex items-center space-x-2 focus:outline-none hover:opacity-80 transition-opacity"
           >
-            <div className="w-10 h-10 bg-[#AE191A] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">S</span>
-            </div>
+            <img
+              src="/LOGO.png"
+              alt="SubastArte Logo"
+              className="w-15 h-14 object-contain"
+            />
             <h1 className="text-2xl font-bold text-[#AE191A]">
-              SubastArte
             </h1>
           </button>
 

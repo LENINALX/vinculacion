@@ -6,6 +6,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'brand-red-dark': '#811714',    // Rojo oscuro
+        'brand-red': '#AE191A',          // Rojo principal
+        'brand-cream': '#FFFADA',        // Crema/amarillo claro
+        
+        // También como paleta (opcional)
+        brand: {
+          red: {
+            dark: '#811714',
+            DEFAULT: '#AE191A',
+          },
+          cream: '#FFFADA',
+        },
         primary: {
           50: '#faf5ff',
           100: '#f3e8ff',
